@@ -3,13 +3,6 @@ body {
   padding-top: 60px;
 }
 
-/* Make sure index hero h1 tag looks ok on mobile phones */
-@media screen and (max-width: 480px) {
-  h1, .hero-unit h1 {
-    font-size: 24pt;
-  }
-}
-
 .hero-unit {
 	margin: 30px auto;
 	max-width: 480px;
@@ -47,3 +40,11 @@ body {
 .btn-facebook.active {
   background-color: #0d2456 \9;
 }
+
+/* Make sure index hero h1 tag looks ok on mobile phones */
+@media screen and (max-width: 480px) {
+  h1, .hero-unit h1 {
+    font-size: 24pt;
+  }
+}
+
