@@ -9,9 +9,9 @@ import settings
 
 from google.appengine.ext import db
 from google.appengine.api import users
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
-from google.appengine.ext.webapp import template
+from google.appengine.ext import webapp2
+from google.appengine.ext.webapp2 import util
+from google.appengine.ext.webapp2 import template
 
 from simplejson import dumps
 
@@ -21,7 +21,7 @@ from libs import oauth
 from utils import *
 from managers import *
 
-template.register_template_library('filters')
+#template.register_template_library('filters')
 
 def require_login(func):
   def validate(self, *args):
@@ -36,7 +36,7 @@ def require_login(func):
         
   return validate
 
-class BaseHandler(webapp.RequestHandler):
+class BaseHandler(webapp2.RequestHandler):
   def get_login_url(self):
     return users.create_login_url(self.request.uri)
   
@@ -75,35 +75,46 @@ class Facebook_signin(BaseHandler):
   def get(self):
     self.render('facebook_signin.html', {})
 
-class LoginHandler(BaseHandler):
+# class LoginHandler(BaseHandler):
   
-  def get(self):
-    auth_token = self.request.get("oauth_token")
-    auth_verifier = self.request.get("oauth_verifier")
+  # def get(self):
+    # auth_token = self.request.get("oauth_token")
+    # auth_verifier = self.request.get("oauth_verifier")
     
-    user_info = settings.twitter_client.get_user_info(auth_token, auth_verifier=auth_verifier)
-    user = create_user(
-      user_info.get('id'),
-      user_info.get('username'),
-      user_info.get('name'),
-      user_info.get('picture'),
-      user_info.get('token'),
-      user_info.get('secret')
-    )
-    cookieutil = LilCookies(self, settings.SECURE_COOKIE)
-    cookieutil.set_secure_cookie(name = '_wda', value = str(user.twitter_id), expires_days= 365)
+    # user_info = settings.twitter_client.get_user_info(auth_token, auth_verifier=auth_verifier)
+    # user = create_user(
+      # user_info.get('id'),
+      # user_info.get('username'),
+      # user_info.get('name'),
+      # user_info.get('picture'),
+      # user_info.get('token'),
+      # user_info.get('secret')
+    # )
+    # cookieutil = LilCookies(self, settings.SECURE_COOKIE)
+    # cookieutil.set_secure_cookie(name = '_wda', value = str(user.twitter_id), expires_days= 365)
 
-    pending_pledge = cookieutil.get_secure_cookie('pending_pledge')
-    if pending_pledge:
-      pc = PledgeFavor()
-      pc.initialize(self.request, self.response)
-      pc.post(pending_pledge, user)
-    else:
-      self.redirect('/dashboard')
+    # pending_pledge = cookieutil.get_secure_cookie('pending_pledge')
+    # if pending_pledge:
+      # pc = PledgeFavor()
+      # pc.initialize(self.request, self.response)
+      # pc.post(pending_pledge, user)
+    # else:
+      # self.redirect('/dashboard')
 
-def main():
-  application = webapp.WSGIApplication([
+# def main():
+  # app = webapp2.WSGIApplication([
 
+    # #nav
+    # ('/', Index),
+    # ('/dashboard', Dashboard),
+	# ('/facebook_signin', Facebook_signin),
+    
+    # #oauth
+    # ('/oauth/verify', LoginHandler)
+  # ], debug=settings.DEBUG)
+  # util.run_wsgi_app(application)
+
+app = webapp2.WSGIApplication([
     #nav
     ('/', Index),
     ('/dashboard', Dashboard),
@@ -112,7 +123,6 @@ def main():
     #oauth
     ('/oauth/verify', LoginHandler)
   ], debug=settings.DEBUG)
-  util.run_wsgi_app(application)
 
-if __name__ == '__main__':
-  main()
+# if __name__ == '__main__':
+  # main()
