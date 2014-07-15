@@ -13,4 +13,4 @@ handlers:
   static_dir: static
 
 - url: .*
-  script: controllers2.app
+  script: controllers.app
